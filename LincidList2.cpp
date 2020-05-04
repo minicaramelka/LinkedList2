@@ -4,63 +4,63 @@
 
 using namespace std;
 
-LinkedList::Node::Node(const ValueType& value, Node* next, Node* last){
+LinkedList2::Node::Node(const ValueType& value, Node* next, Node* last){
 	this->value = value;
 	this->next = next;
 	this->last = last;
 }
 
-LinkedList::Node::~Node(){
+LinkedList2::Node::~Node(){
 	// ничего не удаляем, т.к. агрегация
 }
 
-void LinkedList::Node::insertNext(const ValueType& value){
+void LinkedList2::Node::insertNext(const ValueType& value){
 	Node* newNode = new Node(value, this->next);
 	this->next = newNode;
 }
 
-void LinkedList::Node::removeNext(){
+void LinkedList2::Node::removeNext(){
 	Node* removeNode = this->next;
 	Node* newNext = removeNode->next;
 	delete removeNode;
 	this->next = newNext;
 }
 
-LinkedList::LinkedList():
+LinkedList2::LinkedList2():
 _size(0), _head(nullptr), _tail(nullptr)
 {
 }
 
-LinkedList::LinkedList(const LinkedList& copyList){
+LinkedList2::LinkedList2(const LinkedList2& copyList){
     this->_size = copyList._size;
-	if (this->_size == 0) {
-		this->_head = nullptr;
-		this->_tail = nullptr;
-		return;
-	}
+    if (this->_size == 0){
+        this->_head = nullptr;
+        this->_tail = nullptr;
+        return;
+    }
     this->_head = new Node(copyList._head->value);
     this->_tail = new Node(copyList._tail->value);
-	Node* currentNode = this->_head;
-	Node* currentCopyNode = copyList._head->next;
-	while (currentCopyNode) {
-		currentNode->next = new Node(currentCopyNode->value);
-		currentCopyNode = currentCopyNode->next;
-		currentNode = currentNode->next;
-	}
+    Node* currentNode = this->_head;
+    Node* currentCopyNode = copyList._head->next;
+    while (currentCopyNode){
+        currentNode->next = new Node(currentCopyNode->value);
+        currentCopyNode = currentCopyNode->next;
+        currentNode = currentNode->next;
+    }
 }
 
-LinkedList& LinkedList::operator=(const LinkedList& copyList){
-	if(this == &copyList){
+LinkedList2& LinkedList2::operator=(const LinkedList2& copyList){
+	if (this == &copyList){
 		return *this;
 	}
-	LinkedList bufList(copyList);
+	LinkedList2 bufList(copyList);
 	this->_size = bufList._size;
 	this->_head = bufList._head;
 	this->_tail = bufList._tail;
 	return *this;
 }
 
-LinkedList::LinkedList(LinkedList&& moveList) noexcept{
+LinkedList2::LinkedList2(LinkedList2&& moveList) noexcept{
 	this->_size = moveList._size;
 	this->_head = moveList._head;
 	this->_tail = moveList._tail;
@@ -69,7 +69,7 @@ LinkedList::LinkedList(LinkedList&& moveList) noexcept{
 	moveList._tail = nullptr;
 }
 
-LinkedList& LinkedList::operator=(LinkedList&& moveList) noexcept{
+LinkedList2& LinkedList2::operator=(LinkedList2&& moveList) noexcept{
 	if (this == &moveList){
 		return *this;
 	}
@@ -83,15 +83,15 @@ LinkedList& LinkedList::operator=(LinkedList&& moveList) noexcept{
 	return *this;
 }
 
-LinkedList::~LinkedList(){
+LinkedList2::~LinkedList2(){
 	forceNodeDelete(_head);
 }
 
-ValueType& LinkedList::operator[](const size_t pos) const{
+ValueType& LinkedList2::operator[](const size_t pos) const{
 	return getNode(pos)->value;
 }
 
-LinkedList::Node* LinkedList::getNode(const size_t pos) const{
+LinkedList2::Node* LinkedList2::getNode(const size_t pos) const{
 	if (pos < 0) {
 		assert(pos < 0);
 	}
@@ -105,7 +105,7 @@ LinkedList::Node* LinkedList::getNode(const size_t pos) const{
 	return bufNode;
 }
 
-void LinkedList::insert(const size_t pos, const ValueType& value){
+void LinkedList2::insert(const size_t pos, const ValueType& value){
 	if (pos < 0) {
 		assert(pos < 0);
 	}
@@ -128,12 +128,12 @@ void LinkedList::insert(const size_t pos, const ValueType& value){
 	}
 }
 
-void LinkedList::insertAfterNode(Node* node, const ValueType& value){
+void LinkedList2::insertAfterNode(Node* node, const ValueType& value){
 	node->insertNext(value);
 	_size++;
 }
 
-void LinkedList::pushBack(const ValueType& value){
+void LinkedList2::pushBack(const ValueType& value){
     Node *nd = new Node(value, nullptr, _tail);
     if(_tail != 0){
         _tail->next = nd;
@@ -146,7 +146,7 @@ void LinkedList::pushBack(const ValueType& value){
     
 }
 
-void LinkedList::pushFront(const ValueType& value){
+void LinkedList2::pushFront(const ValueType& value){
     Node *nd = new Node(value, _head, nullptr); 
     if(_head != 0){
         _head->last = nd;
@@ -157,7 +157,7 @@ void LinkedList::pushFront(const ValueType& value){
     _size++;
 }
 
-void LinkedList::remove(const size_t pos){
+void LinkedList2::remove(const size_t pos){
     if(_head){
         if(pos > 0 && pos < _size - 1){
             int counter = 0;
@@ -195,22 +195,22 @@ void LinkedList::remove(const size_t pos){
     }
 }
 
-void LinkedList::removeNextNode(Node* node){
+void LinkedList2::removeNextNode(Node* node){
     Node* removeNode = node->next; 
     node->next = node->next->next; 
     delete removeNode; 
     _size--; 
 }
 
-void LinkedList::removeFront(){
+void LinkedList2::removeFront(){
     remove(0);
 }
 
-void LinkedList::removeBack(){
+void LinkedList2::removeBack(){
     remove(_size - 1);
 }
 
-long long int LinkedList::findIndex(const ValueType& value) const{
+long long int LinkedList2::findIndex(const ValueType& value) const{
     Node* tmp = _head; 
     size_t i = 0; 
     size_t j = 0; 
@@ -228,7 +228,7 @@ long long int LinkedList::findIndex(const ValueType& value) const{
     } 
 }
 
-LinkedList::Node* LinkedList::findNode(const ValueType& value) const{
+LinkedList2::Node* LinkedList2::findNode(const ValueType& value) const{
     size_t i = 0; 
     size_t j = 0; 
     Node* tmp = _head; 
@@ -246,10 +246,10 @@ LinkedList::Node* LinkedList::findNode(const ValueType& value) const{
     }
 }
 
-void LinkedList::reverse(){
+void LinkedList2::reverse(){
     Node *tmp = _head;
-    Node *next = NULL;
-    Node *last = NULL;
+    Node *next = nullptr;
+    Node *last = nullptr;
     while(tmp->next){
         next = tmp->next;
         tmp->next = last;
@@ -259,33 +259,33 @@ void LinkedList::reverse(){
     _head = last;
 }
 
-LinkedList LinkedList::reverse() const{
+LinkedList2 LinkedList2::reverse() const{
     if(_size == 0){
-        return LinkedList();
+        return LinkedList2();
     }
     else{
-    	LinkedList buf(*this);
+    	LinkedList2 buf(*this);
     	buf.reverse();
     	return buf;
     }
 }
 
-LinkedList LinkedList::getReverseList() const{
+LinkedList2 LinkedList2::getReverseList() const{
 	if(_size == 0){
-        return LinkedList();
+        return LinkedList2();
     }
     else{
-    	LinkedList buf(*this);
+    	LinkedList2 buf(*this);
     	buf.reverse();
     	return buf;
     }
 }
 
-size_t LinkedList::size() const{
+size_t LinkedList2::size() const{
 	return _size;
 }
 
-void LinkedList::forceNodeDelete(Node* node){
+void LinkedList2::forceNodeDelete(Node* node){
 	if (node == nullptr){
 		return;
 	}
@@ -294,17 +294,3 @@ void LinkedList::forceNodeDelete(Node* node){
 	forceNodeDelete(nextDeleteNode);
 }
 
-int main(){
-    LinkedList l;
-    l.pushBack(5);
-    l.pushFront(1);
-    l.pushBack(4);
-    l.pushBack(3);
-    l.removeBack();
-    l.removeFront();
-    //l.remove(2);
-   //l.reverse();
-    for(int i = 0; i < l.size(); i++){
-        cout<<l[i]<<" ";
-    }
-}
